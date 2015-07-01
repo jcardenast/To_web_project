@@ -28,6 +28,6 @@
         <script type="text/javascript" src="${pageContext.servletContext.contextPath}/Recursos/Scripts/alert-msg/bootbox.min.js"></script>
     </head>
     <body>
-        <img src="${pageContext.servletContext.contextPath}/Recursos/Imgs/fondo.jpg" />
+        <img src="${pageContext.servletContext.contextPath}/Recursos/Imgs/fondo.jpg" width="100%" height="50px"/>
     </body>
 </html>

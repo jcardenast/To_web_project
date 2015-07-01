@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
+import Logica.*;
 
 /**
  *
@@ -38,9 +39,16 @@ public class LoginServlet extends HttpServlet {
         if (accion.compareTo("Login") == 0) {
             String user = request.getParameter("UserTxt");
             String pass = request.getParameter("PassTxt");
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
+            Usuario uObj = new Usuario();
+            String result = uObj.getUsuario(user, pass);
+
+            if (result.compareTo("-1") == 0) {
+                gotoPage(request, response, "/LoginJsp.jsp");
+            } else if (result.compareTo("") == 0) {
+                gotoPage(request, response, "/LoginJsp.jsp");
+            } else {
+                request.getSession().setAttribute("User_ID", result);
+                //<%String id = (String)session.getAttribute("User_ID");%> <%=id%>
                 gotoPage(request, response, "/InicioJsp.jsp");
             }
         }

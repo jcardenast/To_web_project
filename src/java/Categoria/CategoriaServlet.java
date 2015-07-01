@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Registrar;
+package Categoria;
 
+import Datos.CategoriaDato;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -14,12 +15,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import Logica.*;
+import java.util.ArrayList;
 /**
  *
  * @author JESUS-PC
  */
-@WebServlet(name = "RegistrarServlet", urlPatterns = {"/RegistrarServlet"})
-public class RegistrarServlet extends HttpServlet {
+@WebServlet(name = "CategoriaServlet", urlPatterns = {"/CategoriaServlet"})
+public class CategoriaServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,57 +34,40 @@ public class RegistrarServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         String accion = request.getParameter("accion");
         
-        if(accion.compareTo("Retornar") == 0){
-            gotoPage(request, response, "/LoginJsp.jsp");
-        }else if(accion.compareTo("Registrar") == 0)
+        if(accion.compareTo("Anadir") == 0)
         {
-            String usuario = request.getParameter("UsuarioTxt");
-            String pass1 = request.getParameter("PasswordTxt");
-            String pass2 = request.getParameter("PasswordTxt1");
-            String nombre = request.getParameter("NombreTxt");
-            String apellPat = request.getParameter("ApellPaterTxt");
-            String apellMat = request.getParameter("ApellMaterTxt");
-            String email = request.getParameter("Emailtxt");
+            String nombre = request.getParameter("CatNewTxt");
+            String user = (String)request.getSession().getAttribute("User_ID");
             
-            if(usuario.isEmpty() || pass1.isEmpty() || pass2.isEmpty() || nombre.isEmpty() || 
-                    apellPat.isEmpty() || apellMat.isEmpty() || email.isEmpty())
-            {
-                gotoPage(request, response, "/RegistrarJsp.jsp");
-                return;
-            }
-            
-            Persona pers = new Persona();
-            String id_Pers = pers.guardarPersona(nombre, apellPat, apellMat, email);
-            if(id_Pers.compareTo("") == 0 || id_Pers.compareTo("-1") == 0)
-            {
-                gotoPage(request, response, "/RegistrarJsp.jsp");
+            if(nombre.isEmpty() || user.isEmpty()){
+                gotoPage(request, response, "/CategoriasJsp.jsp");
             }else
             {
-                Usuario user = new Usuario();
-                String id_user = user.guardarUsuario(usuario, pass2, id_Pers);
-                if(id_user.compareTo("") == 0 || id_user.compareTo("-1") == 0)
-                {
-                    gotoPage(request, response, "/RegistrarJsp.jsp");
-                }else
-                {
-                    gotoPage(request, response, "/InicioJsp.jsp");
-                }
-            }
+                Categoria cat = new Categoria();
+                String result = cat.set_Categoria(nombre, user);
+                gotoPage(request, response, "/CategoriasJsp.jsp");
+            }            
         }
-        /*try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RegUrlServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet RegUrlServlet at ajax </h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }*/
+        else if(accion.compareTo("Modificar") == 0)
+        {
+            String nombre = request.getParameter("CatModTxt");
+            String id = request.getParameter("CatModID");
+            if(nombre.isEmpty() || id.isEmpty())
+            {
+                gotoPage(request, response, "/CategoriasJsp.jsp");
+            }else{
+                Categoria cat = new Categoria();
+                String result = cat.modificarCat(id, nombre);
+                gotoPage(request, response, "/CategoriasJsp.jsp");
+            }            
+        }
+        
+        /*String user = (String)request.getSession().getAttribute("User_ID");
+        Categoria categ = new Categoria();
+        ArrayList<CategoriaDato> lista = categ.get_Categorias(user);
+        request.getSession().setAttribute("CategoriasLista", lista);*/
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

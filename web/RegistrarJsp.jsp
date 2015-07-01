@@ -26,10 +26,28 @@
                     document.getElementById('ErrorPass').style.display = 'inline';
                 }
             }
+            
+            function verificar()
+            {
+                var txt = document.getElementById("userTx").value;
+                var direccion = "RegistrarServlet?user="+txt;
+                $.ajax({
+                    type: "GET",
+                    url: direccion,
+                    dataType: "json",
+                    success: mostrar
+                });
+            }
+            function mostrar(values)
+            {
+                alert(values);
+            }
+            
         </script>
     </head>
     <body>
         <form method="Post" action="RegistrarServlet">
+            <br/>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -38,7 +56,7 @@
                                 <div class="form-group">
                                     <label for="UsuarioTxt" class="col-sm-4 control-label">Usuario</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="UsuarioTxt" class="form-control"/>
+                                        <input id="userTx" type="text" name="UsuarioTxt" class="form-control" onblur="verificar();"/>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +77,7 @@
                                     <label for="PasswordTxt1" class="col-sm-4 control-label">Password</label>
                                     <div class="col-sm-8">
                                         <input id="PasswordTxt1" name="PasswordTxt1" class="form-control" type="password" onblur="compareP(); return false;"/>
-                                        <label class="msg-error-validate" id="ErrorPass" style="display: none" runat="server">
+                                        <label class="msg-error-validate" id="ErrorPass" style="display: none">
                                             <i class='glyphicon glyphicon-info-sign'></i> Password Incorrecto!</label>
                                     </div>
                                 </div>
